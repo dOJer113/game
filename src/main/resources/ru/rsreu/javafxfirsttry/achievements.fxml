@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox fx:id="root" alignment="CENTER" prefHeight="541.0" prefWidth="704.0" spacing="20" stylesheets="@achievements.css" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.rsreu.javafxfirsttry.AchievementsController">
+    <Label styleClass="title-label" text="Таблица достижений">
+        <font>
+            <Font size="24" />
+        </font>
+    </Label>
+    <TableView fx:id="achievementsTable" maxWidth="Infinity" minWidth="400.0" styleClass="achievements-table">
+        <columns>
+            <TableColumn fx:id="nameColumn" maxWidth="Infinity" minWidth="200.0" prefWidth="350.0" text="Имя" />
+            <TableColumn fx:id="scoreColumn" maxWidth="Infinity" minWidth="200.0" prefWidth="350.0" text="Количество очков" />
+        </columns>
+    </TableView>
+    <Button fx:id="backButton" maxWidth="600" minWidth="250" onAction="#goBackToMainMenu" prefWidth="200.0" styleClass="back-button" text="Назад" />
+</VBox>

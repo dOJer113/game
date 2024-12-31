@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox alignment="CENTER" prefHeight="549.0" prefWidth="953.0" spacing="20.0"
+stylesheets="@basic.css" xmlns="http://javafx.com/javafx/11.0.14-internal"
+xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.rsreu.javafxfirsttry.MainController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+
+    <Label fx:id="welcomeText" text="Главное меню">
+        <font>
+            <Font name="System Bold Italic" size="32.0" />
+        </font>
+    </Label>
+    <!-- Кнопка Играть -->
+    <Button maxWidth="600" minWidth="250.0" onAction="#onPlayButtonClick" text="Играть" textAlignment="CENTER">
+        <font>
+            <Font size="29.0" />
+        </font>
+    </Button>
+
+    <!-- Кнопка Доска почёта -->
+    <Button  fx:id="tabButton" maxWidth="600" minWidth="250.0" onAction="#onTabButtonClick" text="Доска почёта" textAlignment="CENTER">
+        <font>
+            <Font size="29.0" />
+        </font>
+    </Button>
+
+    <!-- Кнопка Настройки -->
+    <Button fx:id="settingsButton" maxWidth="600" minWidth="250.0" onAction="#onSettingsButtonClick" text="Настройки" textAlignment="CENTER">
+        <font>
+            <Font size="29.0" />
+        </font>
+    </Button>
+    <!-- Кнопка Выхода -->
+    <Button maxWidth="600" minWidth="250.0" onAction="#onExitButtonClick" text="Выйти" textAlignment="CENTER">
+        <font>
+            <Font size="29.0" />
+        </font>
+    </Button>
+</VBox>

@@ -1,0 +1,52 @@
+/* Основные цвета */
+.root {
+    -fx-base: #0a2e38; /* Основной цвет фона (тёмно-синий, как ночное небо) */
+    -fx-background: #0a2e38; /* Цвет фона */
+    -fx-control-inner-background: #1a535c; /* Цвет внутреннего фона элементов */
+    -fx-text-fill: #ffffff; /* Цвет текста */
+    -fx-font-family: "Segoe UI", sans-serif; /* Шрифт */
+    -fx-background-image: url("christmas.png"); /* Узор на фон */
+}
+
+/* Стиль для кнопки "Назад" */
+.back-button {
+    -fx-background-color: #d32f2f; /* Красный цвет фона кнопки */
+    -fx-text-fill: #ffffff; /* Цвет текста кнопки */
+    -fx-font-size: 16px; /* Размер шрифта */
+    -fx-padding: 10px 20px; /* Отступы внутри кнопки */
+    -fx-border-radius: 5px; /* Скругление углов */
+    -fx-background-radius: 5px; /* Скругление углов фона */
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6), 5, 0, 0, 1); /* Тень */
+    -fx-border-color: #ffcc00; /* Жёлтая граница */
+    -fx-border-width: 2px; /* Толщина границы */
+}
+
+.back-button:hover {
+    -fx-background-color: #ff5722; /* Оранжевый цвет фона при наведении */
+    -fx-scale-x: 1.05; /* Увеличение размера */
+    -fx-scale-y: 1.05;
+    -fx-transition: all 0.2s; /* Плавный переход */
+}
+
+.back-button:pressed {
+    -fx-background-color: #b71c1c; /* Тёмно-красный цвет фона при нажатии */
+}
+
+/* Стиль для заголовка */
+.title-label {
+    -fx-text-fill: #ffcc00; /* Жёлтый цвет текста */
+    -fx-font-size: 24px; /* Размер шрифта */
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 2, 0, 0, 1); /* Тень для текста */
+    -fx-font-weight: bold; /* Жирный шрифт */
+}
+
+/* Стиль для таблицы */
+.achievements-table {
+    -fx-background-color: #1a535c; /* Цвет фона таблицы */
+    -fx-text-fill: #ffffff; /* Цвет текста */
+    -fx-font-size: 16px; /* Размер шрифта */
+    -fx-border-color: #ffcc00; /* Жёлтая граница */
+    -fx-border-width: 2px; /* Толщина границы */
+    -fx-border-radius: 5px; /* Скругление углов */
+    -fx-background-radius: 5px; /* Скругление углов фона */
+}

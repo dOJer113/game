@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="CENTER" prefHeight="414.0" prefWidth="441.0" spacing="10" stylesheets="@dark.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.rsreu.javafxfirsttry.SettingsController">
+    <padding>
+        <Insets bottom="20" left="20" right="20" top="20" />
+    </padding>
+
+    <!-- Кнопка выключения звука -->
+    <ToggleButton fx:id="muteButton" maxWidth="550" minWidth="200.0" onAction="#toggleMute" text="Выключить звук" />
+
+    <!-- Ползунок громкости -->
+    <Label text="Громкость:" />
+    <Slider fx:id="volumeSlider" blockIncrement="10" max="100" min="0" showTickLabels="true" showTickMarks="true" value="10" />
+
+    <!-- Кнопка "Применить" -->
+    <Button maxWidth="550" minWidth="200.0" onAction="#applySettings" text="Закрыть" />
+
+</VBox>

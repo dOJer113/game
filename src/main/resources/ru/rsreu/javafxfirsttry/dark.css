@@ -1,0 +1,93 @@
+/* Основные цвета */
+.root {
+    -fx-base: #051a20; /* Основной цвет фона (ещё более тёмный синий) */
+    -fx-background: #051a20; /* Цвет фона */
+    -fx-control-inner-background: #0f3a40; /* Цвет внутреннего фона элементов */
+    -fx-text-fill: #ffffff; /* Цвет текста */
+    -fx-font-family: "Segoe UI", sans-serif; /* Шрифт */
+    -fx-background-image: url("christmas.png"); /* Узор на фон */
+}
+
+/* Стиль для кнопок */
+.button {
+    -fx-background-color: #d32f2f; /* Красный цвет фона кнопки */
+    -fx-text-fill: #ffffff; /* Цвет текста кнопки */
+    -fx-font-size: 16px; /* Размер шрифта */
+    -fx-padding: 10px 20px; /* Отступы внутри кнопки */
+    -fx-border-radius: 5px; /* Скругление углов */
+    -fx-background-radius: 5px; /* Скругление углов фона */
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6), 5, 0, 0, 1); /* Тень */
+    -fx-border-color: #ffcc00; /* Жёлтая граница */
+    -fx-border-width: 2px; /* Толщина границы */
+}
+
+.button:hover {
+    -fx-background-color: #ff5722; /* Оранжевый цвет фона при наведении */
+    -fx-scale-x: 1.05; /* Увеличение размера */
+    -fx-scale-y: 1.05;
+    -fx-transition: all 0.2s; /* Плавный переход */
+}
+
+.button:pressed {
+    -fx-background-color: #b71c1c; /* Тёмно-красный цвет фона при нажатии */
+}
+
+/* Стиль для текстовых меток */
+.label {
+    -fx-text-fill: #ffcc00; /* Жёлтый цвет текста */
+    -fx-font-size: 24px; /* Размер шрифта */
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 2, 0, 0, 1); /* Тень для текста */
+    -fx-font-weight: bold; /* Жирный шрифт */
+}
+
+/* Стиль для ползунка */
+.slider {
+    -fx-control-inner-background: #0f3a40; /* Цвет фона ползунка */
+    -fx-background-color: transparent; /* Прозрачный фон */
+}
+
+.slider .thumb {
+    -fx-background-color: #ffcc00; /* Жёлтый цвет ползунка */
+}
+
+.slider .track {
+    -fx-background-color: #0f3a40; /* Цвет трека */
+}
+
+/* Стиль для ToggleButton */
+.toggle-button {
+    -fx-background-color: #d32f2f; /* Красный цвет фона */
+    -fx-text-fill: #ffffff; /* Цвет текста */
+    -fx-font-size: 16px; /* Размер шрифта */
+    -fx-padding: 10px 20px; /* Отступы */
+    -fx-border-radius: 5px; /* Скругление углов */
+    -fx-background-radius: 5px; /* Скругление углов фона */
+    -fx-border-color: #ffcc00; /* Жёлтая граница */
+    -fx-border-width: 2px; /* Толщина границы */
+}
+
+.toggle-button:selected {
+    -fx-background-color: #ff5722; /* Оранжевый цвет фона при выборе */
+}
+
+/* Стиль для VBox и других контейнеров */
+.vbox, .hbox, .pane {
+    -fx-background-color: #051a20; /* Цвет фона */
+    -fx-border-color: #ffcc00; /* Жёлтая граница */
+    -fx-border-width: 2px; /* Толщина границы */
+    -fx-border-radius: 5px; /* Скругление углов границы */
+    -fx-background-radius: 5px; /* Скругление углов фона */
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6), 5, 0, 0, 1); /* Тень */
+}
+
+/* Стиль для текстовых полей */
+.text-field {
+    -fx-background-color: #0f3a40; /* Цвет фона */
+    -fx-text-fill: #ffffff; /* Цвет текста */
+    -fx-font-size: 16px; /* Размер шрифта */
+    -fx-padding: 5px; /* Отступы */
+    -fx-border-radius: 5px; /* Скругление углов */
+    -fx-background-radius: 5px; /* Скругление углов фона */
+    -fx-border-color: #ffcc00; /* Жёлтая граница */
+    -fx-border-width: 2px; /* Толщина границы */
+}
