@@ -18,7 +18,7 @@ xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.rsreu.javafxfirsttry.MainC
         </font>
     </Label>
     <!-- Кнопка Играть -->
-    <Button maxWidth="600" minWidth="250.0" onAction="#onPlayButtonClick" text="Играть" textAlignment="CENTER">
+    <Button maxWidth="600"  fx:id="playButton" minWidth="250.0" onAction="#onPlayButtonClick" text="Играть" textAlignment="CENTER">
         <font>
             <Font size="29.0" />
         </font>

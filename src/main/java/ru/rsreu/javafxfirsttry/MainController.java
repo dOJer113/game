@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -21,7 +22,8 @@ public class MainController {
     private Button exitButton;
     @FXML
     private Button tabButton;
-
+    @FXML
+    private Button playButton;
     @FXML
     protected void onTabButtonClick() throws IOException {
         URL url = MainController.class.getResource("/ru/rsreu/javafxfirsttry/achievements.fxml");
@@ -44,6 +46,13 @@ public class MainController {
 
     @FXML
     protected void onPlayButtonClick() {
+        Stage mainMenuStage = (Stage) playButton.getScene().getWindow();
+        try {
+            SplashScreenController splashScreen = new SplashScreenController();
+            splashScreen.showModal(mainMenuStage, mainMenuStage);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
