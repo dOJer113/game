@@ -1,6 +1,5 @@
 package ru.rsreu.javafxfirsttry;
 
-import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -11,43 +10,25 @@ import javafx.stage.Stage;
 
 public class StarryNight extends Application {
 
-    public static final int WIDTH = 800;
-    public  static final int HEIGHT = 600;
-    public static double offset = 0; // Смещение для прокрутки фона
-    private final double SCROLL_SPEED = 0.1; // Скорость прокрутки
+    private static final int WIDTH = 800;
+    private static final int HEIGHT = 600;
 
     @Override
     public void start(Stage primaryStage) {
         Canvas canvas = new Canvas(WIDTH, HEIGHT);
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
+        drawDarkBackground(gc); // Тёмный фон
+        drawDimStars(gc); // Тусклые звёзды
+        drawDarkSnowdrifts(gc); // Тёмные сугробы
+        drawDarkTrees(gc); // Почти чёрные деревья
+
         StackPane root = new StackPane(canvas);
         Scene scene = new Scene(root, WIDTH, HEIGHT);
 
-        primaryStage.setTitle("Infinite Scrolling Starry Night");
+        primaryStage.setTitle("Dark Starry Night with Distant Trees and Snowdrifts");
         primaryStage.setScene(scene);
         primaryStage.show();
-
-        // Запуск анимации
-        new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                // Очистка холста
-                gc.clearRect(0, 0, WIDTH, HEIGHT);
-
-                // Отрисовка фона и элементов с учётом смещения
-                drawDarkBackground(gc);
-                drawDimStars(gc, offset);
-                drawDarkSnowdrifts(gc, offset);
-                drawDarkTrees(gc, offset);
-
-                // Увеличиваем смещение для прокрутки
-                offset += SCROLL_SPEED; // Медленная прокрутка
-                if (offset > WIDTH) {
-                    offset = 0; // Сброс смещения для бесконечной прокрутки
-                }
-            }
-        }.start();
     }
 
     private void drawDarkBackground(GraphicsContext gc) {
@@ -55,17 +36,16 @@ public class StarryNight extends Application {
         gc.fillRect(0, 0, WIDTH, HEIGHT);
     }
 
-    private void drawDimStars(GraphicsContext gc, double offset) {
+    private void drawDimStars(GraphicsContext gc) {
         gc.setFill(Color.color(0.8, 0.8, 0.8, 0.7)); // Тусклые звёзды с прозрачностью
         for (int i = 0; i < 100; i++) {
-            double x = (Math.random() * WIDTH + offset) % WIDTH; // Случайная позиция с учётом смещения
+            double x = Math.random() * WIDTH;
             double y = Math.random() * HEIGHT * 0.7; // Звёзды только в верхней части неба
             double size = Math.random() * 2 + 1;
             gc.fillOval(x, y, size, size);
         }
     }
-
-    private void drawDarkSnowdrifts(GraphicsContext gc, double offset) {
+    private void drawDarkSnowdrifts(GraphicsContext gc) {
         // Заливаем сугробы тёмным цветом
         gc.setFill(Color.color(0.2, 0.2, 0.3)); // Тёмные сугробы
         gc.fillRect(0, HEIGHT * 0.7, WIDTH, HEIGHT * 0.3);
@@ -81,10 +61,10 @@ public class StarryNight extends Application {
 
         // Рисуем волну с помощью линии, следующей за синусоидой
         gc.beginPath();
-        gc.moveTo(0, startY + Math.sin(offset * frequency) * amplitude); // Начальная точка с учётом смещения
+        gc.moveTo(0, startY + Math.sin(0) * amplitude); // Начальная точка
 
         for (int x = 0; x <= WIDTH; x++) {
-            double y = startY + Math.sin((x + offset) * frequency) * amplitude; // Вычисляем y для текущего x с учётом смещения
+            double y = startY + Math.sin(x * frequency) * amplitude; // Вычисляем y для текущего x
             gc.lineTo(x, y); // Рисуем линию до следующей точки
         }
 
@@ -97,14 +77,14 @@ public class StarryNight extends Application {
         gc.fill();
     }
 
-    private void drawDarkTrees(GraphicsContext gc, double offset) {
+    private void drawDarkTrees(GraphicsContext gc) {
         Color treeColor = Color.color(0.1, 0.1, 0.1); // Почти чёрный цвет для деревьев
         gc.setFill(treeColor);
 
         double snowTopY = HEIGHT * 0.7; // Верхняя граница снега
 
         for (int i = 0; i < 20; i++) { // Больше деревьев для эффекта глубины
-            double x = (Math.random() * WIDTH + offset) % WIDTH; // Случайная позиция с учётом смещения
+            double x = Math.random() * WIDTH;
             double scale = Math.random() * 0.5 + 0.3; // Меньший размер для далёких деревьев
 
             // Нижняя точка дерева должна быть на уровне или ниже верхней границы снега
