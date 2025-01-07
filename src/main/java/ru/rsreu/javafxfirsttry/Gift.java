@@ -44,12 +44,12 @@ public class Gift {
         // Лента по горизонтали
         ribbonHorizontal = new Line(x, y + 62.5, x + 25, y + 62.5); // Центр основания
         ribbonHorizontal.setStroke(ribbonColor);
-        ribbonHorizontal.setStrokeWidth(1.5); // Толщина ленты уменьшена
+        ribbonHorizontal.setStrokeWidth(1.5);
 
         // Лента по вертикали
         ribbonVertical = new Line(x + 12.5, y + 50, x + 12.5, y + 75); // Центр крышки и основания
         ribbonVertical.setStroke(ribbonColor);
-        ribbonVertical.setStrokeWidth(1.5); // Толщина ленты уменьшена
+        ribbonVertical.setStrokeWidth(1.5);
 
         // Бантик
         bow = new Path();

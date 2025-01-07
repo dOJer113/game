@@ -31,6 +31,7 @@ public class StarryNight extends Application {
     private GraphicsContext gc2;
     private Image image1;
     private Image image2;
+    private int c = 0;
 
     @Override
     public void start(Stage primaryStage) {
@@ -170,6 +171,10 @@ public class StarryNight extends Application {
         drawDarkTrees(gc);
 
         // Рисуем дома для текущего холста
+        if(c==0){
+            c++;
+            return;
+        }
         if (gc == gc1) {
             housesCanvas1.clear();
             drawHouses(gc, housesCanvas1); // Рисуем дома для canvas1

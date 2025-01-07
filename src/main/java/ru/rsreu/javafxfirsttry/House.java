@@ -14,7 +14,7 @@ public class House {
             Color.rgb(47, 79, 79),
             Color.rgb(139, 0, 0),
             Color.rgb(255, 140, 0),
-            Color.rgb(30, 30, 30)
+            Color.rgb(224, 191, 162)
     };
 
     private static final Color[] ROOF_COLORS = {
