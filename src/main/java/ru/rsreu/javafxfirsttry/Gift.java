@@ -22,13 +22,13 @@ public class Gift {
         Color giftColor = Color.rgb(
                 150 + random.nextInt(106),  // Красный (150-255)
                 150 + random.nextInt(106),  // Зелёный (150-255)
-                150 + random.nextInt(106)   // Синий (150-255)
+                100 + random.nextInt(106)   // Синий (150-255)
         );
 
         Color ribbonColor = Color.rgb(
                 150 + random.nextInt(106),  // Красный (150-255)
                 150 + random.nextInt(106),  // Зелёный (150-255)
-                150 + random.nextInt(106)   // Синий (150-255)
+                100 + random.nextInt(106)   // Синий (150-255)
         );
 
         // Основание подарка

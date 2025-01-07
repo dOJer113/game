@@ -5,30 +5,44 @@ import javafx.scene.paint.Color;
 
 import java.util.Random;
 
+import static ru.rsreu.javafxfirsttry.StarryNight.WIDTH;
+
 public class House {
 
     private static final Color[] WALL_COLORS = {
-            Color.DARKSLATEBLUE,
-            Color.DARKSLATEGRAY,
-            Color.DARKGREEN
+            Color.rgb(72, 61, 139),
+            Color.rgb(47, 79, 79),
+            Color.rgb(139, 0, 0),
+            Color.rgb(255, 140, 0),
+            Color.rgb(30, 30, 30)
     };
 
     private static final Color[] ROOF_COLORS = {
-            Color.SIENNA,
-            Color.MAROON,
-            Color.DARKOLIVEGREEN
+            Color.rgb(160, 82, 45),
+            Color.rgb(128, 0, 0),
+            Color.rgb(0, 0, 139),
+            Color.rgb(184, 134, 11),
+            Color.rgb(0, 139, 139),
+            Color.rgb(189, 183, 107),
+            Color.rgb(40, 20, 20)
     };
-
-    private static final Color[] GARLAND_COLORS = {
+    public static final Color[] GARLAND_COLORS = {
             Color.RED,
             Color.GREEN,
-            Color.BLUE
+            Color.BLUE,
+            Color.ORANGE,
+            Color.PURPLE,
+            Color.CYAN,
+            Color.MAGENTA,
+            Color.rgb(255, 105, 180), // Розовый
+            Color.rgb(255, 215, 0)    // Золотой
     };
 
     private double x;
     private double y;
     private boolean isTwoStory;
-    private static int garlandColorIndex = 0; // Индекс текущего цвета гирлянды
+    public static int garlandColorIndex = 0; // Индекс текущего цвета гирлянды
+    public static final double scale = 0.4; // Масштабирующий коэффициент
 
     public House(double x, double y, boolean isTwoStory) {
         this.x = x;
@@ -36,8 +50,38 @@ public class House {
         this.isTwoStory = isTwoStory;
     }
 
+    public double getX() {
+        return x;
+    }
+
+    public double getWidth() {
+        return 300 * scale;
+    }
+
+    public void updateGarland(GraphicsContext gc) {
+        // Рисуем гирлянду на верхней части дома
+        double roofY = isTwoStory ? y - 200 * scale : y;
+
+        drawGarland(gc, x, roofY, 300 * scale, 10, scale);
+
+        // Рисуем гирлянду на левой стене первого этажа
+        drawGarland(gc, x, y, 200 * scale, 10, scale, true);
+
+        // Рисуем гирлянду на правой стене первого этажа
+        drawGarland(gc, x + 300 * scale, y, 200 * scale, 10, scale, true);
+
+        // Проверяем, является ли дом двухэтажным
+        if (isTwoStory) {
+            // Рисуем гирлянду на левой стене второго этажа
+            drawGarland(gc, x, y - 200 * scale, 200 * scale, 10, scale, true);
+
+            // Рисуем гирлянду на правой стене второго этажа
+            drawGarland(gc, x + 300 * scale, y - 200 * scale, 200 * scale, 10, scale, true);
+        }
+    }
+
+
     public void draw(GraphicsContext gc) {
-        double scale = 0.4; // Масштабирующий коэффициент
 
         // Выбор цвета стен и крыши
         Random random = new Random();
@@ -125,8 +169,6 @@ public class House {
             gc.fillOval(lightX - 5 * scale, lightY - 5 * scale, 10 * scale, 10 * scale);
         }
     }
-
-
 
 
 }
