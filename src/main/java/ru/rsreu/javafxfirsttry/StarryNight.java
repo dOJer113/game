@@ -23,6 +23,7 @@ public class StarryNight extends Application {
     private long lastGiftTime = 0; // Время последнего создания подарка
     private static final long GIFT_COOLDOWN = 1_000_000_000L; // 2 секунды в наносекундах
     private List<Gift> gifts = new ArrayList<>();
+    private List<House> houses = new ArrayList<>(); // Список домов
     private Image image1;
     private Image image2;
 
@@ -92,16 +93,13 @@ public class StarryNight extends Application {
                     background2.setImage(image2);
                 }
 
+                // Update gifts
                 List<Gift> giftsCopy = new ArrayList<>(gifts);
-
-                // Итерируемся по копии списка
                 for (Gift gift : giftsCopy) {
                     gift.update();
-
-                    // Удаляем подарок, если он уходит за пределы экрана
                     if (gift.isOutOfScreen()) {
-                        gifts.remove(gift); // Удаляем подарок из оригинального списка
-                        gift.removeFromPane(); // Удаляем подарок с панели
+                        gifts.remove(gift);
+                        gift.removeFromPane();
                     }
                 }
             }
@@ -187,19 +185,24 @@ public class StarryNight extends Application {
                 House house2 = new House(baseX + 300 * 0.4 + 50, HEIGHT - 200, !isFirstHouseTwoStory); // Второй домик
                 house1.draw(gc);
                 house2.draw(gc);
+                houses.add(house1); // Добавляем первый дом в список
+                houses.add(house2); // Добавляем второй дом в список
             } else {
                 // Если места недостаточно, создаём один домик
                 boolean isTwoStory = random.nextBoolean(); // Случайно выбираем, будет ли дом двухэтажным
                 House house = new House(baseX, HEIGHT - 200, isTwoStory); // Одиночный домик
                 house.draw(gc);
+                houses.add(house); // Добавляем дом в список
             }
         } else {
             // Создаём один домик
             boolean isTwoStory = random.nextBoolean(); // Случайно выбираем, будет ли дом двухэтажным
             House house = new House(baseX, HEIGHT - 200, isTwoStory); // Одиночный домик
             house.draw(gc);
+            houses.add(house); // Добавляем дом в список
         }
     }
+
     // Рисуем фон
     private void drawDarkBackground(GraphicsContext gc) {
         gc.setFill(Color.color(0.05, 0.05, 0.1));
