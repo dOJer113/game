@@ -33,7 +33,7 @@ public class ScoreFileHandler {
     }
 
     public static List<Achievement> readAllRecords() throws IOException {
-        ensureFileExists(); // Убедимся, что файл существует
+        ensureFileExists();
         List<Achievement> achievements = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
             String line;

@@ -61,27 +61,9 @@ public class SplashScreenController {
                     stage.close(); // Close the splash screen
 
                     Platform.runLater(() -> {
-                        try {
-                            // Close the main menu stage
-
-
-                            // Load the new page
-                            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ru/rsreu/javafxfirsttry/game.fxml"));
-                            Scene newScene = new Scene(loader.load(), 600, 400);
-
-                            // Open the new stage
-                            Stage newStage = new Stage();
-                            newStage.setScene(newScene);
-                            newStage.setFullScreen(true);
-                            String userName = System.getProperty("user.name");
-                            newStage.setTitle(userName+"`s app");
-                            newStage.setFullScreenExitHint("");
-                            newStage.setFullScreen(true);
-                            newStage.show();
-                            mainMenuStage.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        StarryNight starryNight = new StarryNight();
+                        starryNight.start(mainMenuStage);
+                        //mainMenuStage.close();
                     });
                 })
         );
