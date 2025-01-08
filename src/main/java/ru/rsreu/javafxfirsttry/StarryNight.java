@@ -24,7 +24,7 @@ public class StarryNight extends Application {
     public static final int HEIGHT = 590;
     public static int SPEED = 3;
     private long lastGiftTime = 0;
-    private static final long GIFT_COOLDOWN = 600_000__000L;
+    private static final long GIFT_COOLDOWN = 600_000_000L;
     private int tickCounter = 0;
     public static List<Gift> gifts = new ArrayList<>();
     private List<House> housesCanvas1 = new ArrayList<>(); // Список домов для canvas1
@@ -37,8 +37,28 @@ public class StarryNight extends Application {
     public static int score = 0;
     public static boolean isFirst = true;
 
+    private static final int FRAME_COUNT = 10; // Количество кадров
+    private static final int FRAME_DURATION = 100_000_000; // Длительность одного кадра в наносекундах (0.1 секунды)
+    private static final String SANTA_SPRITE_PATH = "C:\\Users\\aleks\\Downloads\\IdeaPR\\JavaFXFirstTry\\src\\main\\resources\\ru\\rsreu\\javafxfirsttry\\santa\\Run (%d).png"; // Путь к спрайтам
+    private Image[] santaFrames;
+    private ImageView santaView;
+    private int currentFrame = 0;
+    private long lastUpdate = 0;
+
     @Override
     public void start(Stage primaryStage) {
+        // Загрузка спрайтов Санты
+        santaFrames = new Image[FRAME_COUNT];
+        for (int i = 0; i < FRAME_COUNT; i++) {
+            santaFrames[i] = new Image(String.format(SANTA_SPRITE_PATH, i + 1));
+        }
+
+        santaView = new ImageView(santaFrames[0]);
+        santaView.setFitWidth(145);
+        santaView.setFitHeight(100);
+        santaView.setX(200);
+        santaView.setY(100);
+
         Canvas canvas1 = new Canvas(WIDTH, HEIGHT);
         Canvas canvas2 = new Canvas(WIDTH, HEIGHT);
         gc1 = canvas1.getGraphicsContext2D();
@@ -61,9 +81,6 @@ public class StarryNight extends Application {
         ImageView background1 = new ImageView(image1);
         ImageView background2 = new ImageView(image2);
 
-        Image santa = new Image("C:\\Users\\aleks\\Downloads\\IdeaPR\\JavaFXFirstTry\\src\\main\\resources\\ru\\rsreu\\javafxfirsttry\\santa2.0.gif");
-        ImageView santaView = new ImageView(santa);
-
         background1.setFitWidth(WIDTH);
         background1.setFitHeight(HEIGHT);
         background2.setFitWidth(WIDTH);
@@ -71,8 +88,7 @@ public class StarryNight extends Application {
 
         background2.setX(WIDTH);
 
-
-        Pane pane = new Pane(background1, background2, scoreText);
+        Pane pane = new Pane(background1, background2, scoreText, santaView);
         Scene scene = new Scene(pane, WIDTH, HEIGHT);
 
         primaryStage.setTitle("Starry Night");
@@ -80,46 +96,46 @@ public class StarryNight extends Application {
         primaryStage.centerOnScreen();
         primaryStage.show();
 
-        // Добавляем Санту
-        santaView.setFitWidth(216);
-        santaView.setFitHeight(110);
-        santaView.setX(200);
-        santaView.setY(100);
-        pane.getChildren().add(santaView);
-
-        // Анимация прокрутки фона
+        // Анимация прокрутки фона и анимация Санты
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
+                // Анимация Санты
+                if (now - lastUpdate >= FRAME_DURATION) {
+                    currentFrame = (currentFrame + 1) % FRAME_COUNT;
+                    santaView.setImage(santaFrames[currentFrame]);
+                    lastUpdate = now;
+                }
+
+                // Прокрутка фона и логика игры
                 scoreText.setText("Score: " + score);
                 background1.setX(background1.getX() - SPEED);
                 background2.setX(background2.getX() - SPEED);
-                // Перемещаем фон, если он уходит за пределы видимости
+
                 if (background1.getX() + WIDTH <= 0) {
                     background1.setX(background2.getX() + WIDTH);
                     drawBackground(gc1);
-                    image1 = canvas1.snapshot(null, null); // Обновляем изображение фона
+                    image1 = canvas1.snapshot(null, null);
                     background1.setImage(image1);
                 }
                 if (background2.getX() + WIDTH <= 0) {
                     background2.setX(background1.getX() + WIDTH);
                     drawBackground(gc2);
-                    image2 = canvas2.snapshot(null, null); // Обновляем изображение фона
+                    image2 = canvas2.snapshot(null, null);
                     background2.setImage(image2);
-
                 }
 
                 tickCounter++;
                 if (tickCounter % 30 == 0) {
                     House.garlandColorIndex = (House.garlandColorIndex + 1) % House.GARLAND_COLORS.length;
                     for (House house : housesCanvas1) {
-                        house.updateGarland(canvas1.getGraphicsContext2D()); // Рисуем новую гирлянду
-                        image1 = canvas1.snapshot(null, null); // Обновляем изображение фона
+                        house.updateGarland(canvas1.getGraphicsContext2D());
+                        image1 = canvas1.snapshot(null, null);
                         background1.setImage(image1);
                     }
                     for (House house : housesCanvas2) {
-                        house.updateGarland(canvas2.getGraphicsContext2D()); // Рисуем новую гирлянду
-                        image2 = canvas2.snapshot(null, null); // Обновляем изображение фона
+                        house.updateGarland(canvas2.getGraphicsContext2D());
+                        image2 = canvas2.snapshot(null, null);
                         background2.setImage(image2);
                     }
                 }
@@ -132,7 +148,7 @@ public class StarryNight extends Application {
                     for (House house : currentHouses) {
                         if (!house.isHasGift()) {
                             double start = isFirst ? background2.getX() : background1.getX();
-                            if (start <=  0) {
+                            if (start <= 0) {
                                 house.setRealX(start + 1000 + house.getX());
                             } else {
                                 house.setRealX(start - 1000 + house.getX());
@@ -142,9 +158,6 @@ public class StarryNight extends Application {
                                 gift.removeFromPane();
                                 score++;
                                 house.giveGift();
-                                System.out.println("Текущая канва: " + (isFirst ? 1 : 2));
-                                System.out.println("Подарок упал на дом " + house);
-                                System.out.println("Координаты подарка :" + gift.getBase().getX() + ", " + gift.getBase().getWidth());
                             }
                         }
                     }
@@ -156,6 +169,8 @@ public class StarryNight extends Application {
                 }
             }
         };
+
+        // Управление Сантой
         scene.setOnKeyPressed(event -> {
             KeyCode key = event.getCode();
             double step = 5;
@@ -165,28 +180,28 @@ public class StarryNight extends Application {
 
             if (key == KeyCode.W) { // Вверх
                 double newY = currentY - step;
-                if (newY >= 0) { // Проверяем, чтобы Санта не выходил за верхнюю границу
+                if (newY >= 0) {
                     santaView.setY(newY);
                 }
             } else if (key == KeyCode.S) { // Вниз
                 double newY = currentY + step;
-                if (newY + santaView.getFitHeight() <= HEIGHT - 400) { // Проверяем, чтобы Санта не выходил за нижнюю границу
+                if (newY + santaView.getFitHeight() <= HEIGHT - 400) {
                     santaView.setY(newY);
                 }
             } else if (key == KeyCode.SPACE) {
-                long currentTime = System.nanoTime(); // Текущее время в наносекундах
+                long currentTime = System.nanoTime();
                 if (currentTime - lastGiftTime >= GIFT_COOLDOWN) {
-                    double giftX = santaView.getX() + 20; // Центрируем подарок по горизонтали
-                    double giftY = santaView.getY() + 80; // Подарок появляется под Сантой
+                    double giftX = santaView.getX() + 20;
+                    double giftY = santaView.getY();
                     Gift gift = new Gift(pane, giftX, giftY);
                     gifts.add(gift);
-                    lastGiftTime = currentTime; // Обновляем время последнего создания подарка
+                    lastGiftTime = currentTime;
                 }
             }
         });
+
         timer.start();
     }
-
 
     // Метод для отрисовки фона
     // Метод для отрисовки фона
