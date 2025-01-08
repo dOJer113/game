@@ -20,6 +20,12 @@ import java.util.Random;
 
 public class StarryNight extends Application {
 
+    public double gameDuration;
+    public boolean gameOver;
+    private static final String SNOWFLAKE_IMAGE_PATH = "C:\\Users\\aleks\\Downloads\\IdeaPR\\JavaFXFirstTry\\src\\main\\resources\\ru\\rsreu\\javafxfirsttry\\snowflake.png"; // Укажите путь к изображению снежинки
+    private Image snowflakeImage = new Image(SNOWFLAKE_IMAGE_PATH, 100, 100, true, true);
+    private List<Snowflake> snowflakes = new ArrayList<>();
+
     public static final int WIDTH = 1000;
     public static final int HEIGHT = 590;
     public static int SPEED = 3;
@@ -185,7 +191,7 @@ public class StarryNight extends Application {
                 }
             } else if (key == KeyCode.S) { // Вниз
                 double newY = currentY + step;
-                if (newY + santaView.getFitHeight() <= HEIGHT - 400) {
+                if (newY + santaView.getFitHeight() <= HEIGHT - 350) {
                     santaView.setY(newY);
                 }
             } else if (key == KeyCode.SPACE) {
@@ -203,7 +209,43 @@ public class StarryNight extends Application {
         timer.start();
     }
 
-    // Метод для отрисовки фона
+    private void drawSnowflakes(GraphicsContext gc) {
+        snowflakes.clear();
+
+        double areaHeight = 100;
+        double area1Y = 0;
+
+        createSnowflakeInArea(area1Y, areaHeight);
+
+        // Отрисовываем снежинки
+        for (Snowflake snowflake : snowflakes) {
+            snowflake.draw(gc);
+        }
+    }
+
+    private void createSnowflakeInArea(double areaY, double areaHeight) {
+        Random random = new Random();
+        double x = 100 + random.nextDouble() * (WIDTH - 200);
+
+        double y1 = areaY;
+        double y2 = areaY + areaHeight;
+
+        double y = random.nextBoolean() ? y1 : y2;
+
+        boolean isOverlapping = false;
+        for (Snowflake snowflake : snowflakes) {
+            if (Math.abs(snowflake.getX() - x) < 100 + random.nextDouble() * 50) {
+                isOverlapping = true;
+                break;
+            }
+        }
+
+        if (!isOverlapping) {
+            Snowflake snowflake = new Snowflake(x, y, snowflakeImage);
+            snowflakes.add(snowflake);
+        }
+    }
+
     // Метод для отрисовки фона
     private void drawBackground(GraphicsContext gc) {
         // Очищаем старый фон
@@ -214,12 +256,11 @@ public class StarryNight extends Application {
         drawDimStars(gc);
         drawDarkSnowdrifts(gc);
         drawDarkTrees(gc);
-
-        // Рисуем дома для текущего холста
         if (c == 0) {
             c++;
             return;
         }
+        drawSnowflakes(gc);
         if (gc == gc1) {
             housesCanvas1.clear();
             drawHouses(gc, housesCanvas1); // Рисуем дома для canvas1
