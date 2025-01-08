@@ -3,6 +3,8 @@ package ru.rsreu.javafxfirsttry;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import static ru.rsreu.javafxfirsttry.StarryNight.WIDTH;
@@ -39,23 +41,84 @@ public class House {
     };
 
     private double x;
+    private double realX;
     private double y;
-    private boolean isTwoStory;
+    public boolean isTwoStory;
     public static int garlandColorIndex = 0; // Индекс текущего цвета гирлянды
     public static final double scale = 0.4; // Масштабирующий коэффициент
+    private boolean hasGift = false; // Поле, указывающее, был ли подарен подарок
+    private int giftCounter = 0;
+    private Color wallColor;
+    private Color roofColor;
 
     public House(double x, double y, boolean isTwoStory) {
         this.x = x;
         this.y = y;
         this.isTwoStory = isTwoStory;
+        Random random = new Random();
+        this.wallColor = WALL_COLORS[random.nextInt(WALL_COLORS.length)];
+        this.roofColor = ROOF_COLORS[random.nextInt(ROOF_COLORS.length)];
+    }
+
+    public double[] getRoofXPoints() {
+        return new double[]{realX, realX + 300 * scale, realX + 150 * scale};
     }
 
     public double getX() {
         return x;
     }
 
-    public double getWidth() {
-        return 300 * scale;
+    public double[] getRoofYPoints() {
+        double roofY = isTwoStory ? y - 200 * scale : y;
+        return new double[]{roofY, roofY, roofY - 100 * scale};
+    }
+
+    public void setRealX(double realX) {
+        this.realX = realX;
+    }
+
+    public boolean isGiftOnRoof(Gift gift) {
+        // Получаем координаты крыши
+        double[] roofXPoints = getRoofXPoints();
+        double[] roofYPoints = getRoofYPoints();
+
+        // Получаем координаты подарка
+        double giftX = gift.getBase().getX();
+        double giftY = gift.getBase().getY() + gift.getBase().getHeight(); // Нижняя часть подарка
+        double giftWidth = gift.getBase().getWidth();
+
+        // Проверяем, находится ли нижняя часть подарка внутри треугольника крыши
+        return isPointInTriangle(giftX, giftY, roofXPoints, roofYPoints) ||
+                isPointInTriangle(giftX + giftWidth, giftY, roofXPoints, roofYPoints);
+    }
+
+    // Метод для проверки, находится ли точка внутри треугольника
+    private boolean isPointInTriangle(double px, double py, double[] xPoints, double[] yPoints) {
+        double x1 = xPoints[0];
+        double y1 = yPoints[0];
+        double x2 = xPoints[1];
+        double y2 = yPoints[1];
+        double x3 = xPoints[2];
+        double y3 = yPoints[2];
+
+        double alpha = ((y2 - y3) * (px - x3) + (x3 - x2) * (py - y3)) /
+                ((y2 - y3) * (x1 - x3) + (x3 - x2) * (y1 - y3));
+        double beta = ((y3 - y1) * (px - x3) + (x1 - x3) * (py - y3)) /
+                ((y2 - y3) * (x1 - x3) + (x3 - x2) * (y1 - y3));
+        double gamma = 1.0 - alpha - beta;
+
+        return alpha >= 0 && beta >= 0 && gamma >= 0;
+    }
+
+    public boolean isHasGift() {
+        return this.hasGift;
+    }
+
+    public void giveGift() {
+        giftCounter++;
+        if ((isTwoStory && giftCounter == 2) || (!isTwoStory && giftCounter == 1)) {
+            hasGift = true;
+        }
     }
 
     public void updateGarland(GraphicsContext gc) {
@@ -80,14 +143,7 @@ public class House {
         }
     }
 
-
     public void draw(GraphicsContext gc) {
-
-        // Выбор цвета стен и крыши
-        Random random = new Random();
-        Color wallColor = WALL_COLORS[random.nextInt(WALL_COLORS.length)];
-        Color roofColor = ROOF_COLORS[random.nextInt(ROOF_COLORS.length)];
-
         // Нижняя стена (основание дома)
         gc.setFill(wallColor);
         gc.fillRect(x, y, 300 * scale, 200 * scale);
@@ -142,7 +198,6 @@ public class House {
         gc.setFill(Color.DARKRED);
         gc.fillRect(x + 180 * scale, roofY - 140 * scale, 60 * scale, 120 * scale);
 
-
         // Гирлянда на верхней части дома
         drawGarland(gc, x, roofY, 300 * scale, 10, scale);
 
@@ -169,6 +224,4 @@ public class House {
             gc.fillOval(lightX - 5 * scale, lightY - 5 * scale, 10 * scale, 10 * scale);
         }
     }
-
-
 }

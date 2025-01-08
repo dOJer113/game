@@ -4,6 +4,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 
+import java.util.List;
 import java.util.Random;
 
 public class Gift {
@@ -78,30 +79,34 @@ public class Gift {
         root.getChildren().removeAll(base, lid, ribbonHorizontal, ribbonVertical, bow);
     }
 
+    public Rectangle getBase() {
+        return base;
+    }
+
     public void update() {
         // Двигаем подарок вниз и немного назад (влево)
         base.setY(base.getY() + speed);
-        base.setX(base.getX() - speed * 0.5); // Двигаем влево с половиной скорости
+        base.setX(base.getX() - speed * 0.5);
 
         lid.setY(lid.getY() + speed);
-        lid.setX(lid.getX() - speed * 0.5); // Двигаем влево с половиной скорости
+        lid.setX(lid.getX() - speed * 0.5);
 
         ribbonHorizontal.setStartY(ribbonHorizontal.getStartY() + speed);
-        ribbonHorizontal.setStartX(ribbonHorizontal.getStartX() - speed * 0.5); // Двигаем влево с половиной скорости
+        ribbonHorizontal.setStartX(ribbonHorizontal.getStartX() - speed * 0.5);
         ribbonHorizontal.setEndY(ribbonHorizontal.getEndY() + speed);
-        ribbonHorizontal.setEndX(ribbonHorizontal.getEndX() - speed * 0.5); // Двигаем влево с половиной скорости
+        ribbonHorizontal.setEndX(ribbonHorizontal.getEndX() - speed * 0.5);
 
         ribbonVertical.setStartY(ribbonVertical.getStartY() + speed);
-        ribbonVertical.setStartX(ribbonVertical.getStartX() - speed * 0.5); // Двигаем влево с половиной скорости
+        ribbonVertical.setStartX(ribbonVertical.getStartX() - speed * 0.5);
         ribbonVertical.setEndY(ribbonVertical.getEndY() + speed);
-        ribbonVertical.setEndX(ribbonVertical.getEndX() - speed * 0.5); // Двигаем влево с половиной скорости
+        ribbonVertical.setEndX(ribbonVertical.getEndX() - speed * 0.5);
 
         bow.setTranslateY(bow.getTranslateY() + speed);
-        bow.setTranslateX(bow.getTranslateX() - speed * 0.5); // Двигаем влево с половиной скорости
+        bow.setTranslateX(bow.getTranslateX() - speed * 0.5);
 
         // Удаляем подарок, если он уходит за пределы экрана
         if (base.getY() > StarryNight.HEIGHT || base.getX() + base.getWidth() < 0) {
-            root.getChildren().removeAll(base, lid, ribbonHorizontal, ribbonVertical, bow);
+            removeFromPane();
         }
     }
 }

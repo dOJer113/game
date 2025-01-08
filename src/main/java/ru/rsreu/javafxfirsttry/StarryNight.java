@@ -10,6 +10,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -22,9 +24,9 @@ public class StarryNight extends Application {
     public static final int HEIGHT = 590;
     public static int SPEED = 3;
     private long lastGiftTime = 0;
-    private static final long GIFT_COOLDOWN = 900_000__000L;
+    private static final long GIFT_COOLDOWN = 600_000__000L;
     private int tickCounter = 0;
-    private List<Gift> gifts = new ArrayList<>();
+    public static List<Gift> gifts = new ArrayList<>();
     private List<House> housesCanvas1 = new ArrayList<>(); // Список домов для canvas1
     private List<House> housesCanvas2 = new ArrayList<>(); // Список домов для canvas2
     private GraphicsContext gc1; // GraphicsContext для canvas1
@@ -32,6 +34,8 @@ public class StarryNight extends Application {
     private Image image1;
     private Image image2;
     private int c = 0;
+    public static int score = 0;
+    public static boolean isFirst = true;
 
     @Override
     public void start(Stage primaryStage) {
@@ -39,6 +43,11 @@ public class StarryNight extends Application {
         Canvas canvas2 = new Canvas(WIDTH, HEIGHT);
         gc1 = canvas1.getGraphicsContext2D();
         gc2 = canvas2.getGraphicsContext2D();
+        Text scoreText = new Text("Score: 0");
+        scoreText.setFont(Font.font("Arial", 24));
+        scoreText.setFill(Color.WHITE);
+        scoreText.setX(20);
+        scoreText.setY(30);
 
         // Рисуем фон, звёзды, сугробы и деревья
         drawBackground(gc1);
@@ -63,7 +72,7 @@ public class StarryNight extends Application {
         background2.setX(WIDTH);
 
 
-        Pane pane = new Pane(background1, background2);
+        Pane pane = new Pane(background1, background2, scoreText);
         Scene scene = new Scene(pane, WIDTH, HEIGHT);
 
         primaryStage.setTitle("Starry Night");
@@ -82,9 +91,9 @@ public class StarryNight extends Application {
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
+                scoreText.setText("Score: " + score);
                 background1.setX(background1.getX() - SPEED);
                 background2.setX(background2.getX() - SPEED);
-
                 // Перемещаем фон, если он уходит за пределы видимости
                 if (background1.getX() + WIDTH <= 0) {
                     background1.setX(background2.getX() + WIDTH);
@@ -99,8 +108,8 @@ public class StarryNight extends Application {
                     background2.setImage(image2);
 
                 }
-                tickCounter++;
 
+                tickCounter++;
                 if (tickCounter % 30 == 0) {
                     House.garlandColorIndex = (House.garlandColorIndex + 1) % House.GARLAND_COLORS.length;
                     for (House house : housesCanvas1) {
@@ -115,9 +124,30 @@ public class StarryNight extends Application {
                     }
                 }
 
-                // Update gifts
                 List<Gift> giftsCopy = new ArrayList<>(gifts);
                 for (Gift gift : giftsCopy) {
+                    double currentX = gift.getBase().getX();
+                    isFirst = currentX > background1.getX() && currentX < background1.getX() + WIDTH;
+                    List<House> currentHouses = isFirst ? housesCanvas1 : housesCanvas2;
+                    for (House house : currentHouses) {
+                        if (!house.isHasGift()) {
+                            double start = isFirst ? background2.getX() : background1.getX();
+                            if (start <=  0) {
+                                house.setRealX(start + 1000 + house.getX());
+                            } else {
+                                house.setRealX(start - 1000 + house.getX());
+                            }
+                            if (house.isGiftOnRoof(gift)) {
+                                gifts.remove(gift);
+                                gift.removeFromPane();
+                                score++;
+                                house.giveGift();
+                                System.out.println("Текущая канва: " + (isFirst ? 1 : 2));
+                                System.out.println("Подарок упал на дом " + house);
+                                System.out.println("Координаты подарка :" + gift.getBase().getX() + ", " + gift.getBase().getWidth());
+                            }
+                        }
+                    }
                     gift.update();
                     if (gift.isOutOfScreen()) {
                         gifts.remove(gift);
@@ -171,7 +201,7 @@ public class StarryNight extends Application {
         drawDarkTrees(gc);
 
         // Рисуем дома для текущего холста
-        if(c==0){
+        if (c == 0) {
             c++;
             return;
         }
