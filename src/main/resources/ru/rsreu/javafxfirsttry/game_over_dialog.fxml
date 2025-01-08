@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="CENTER" prefHeight="414.0" prefWidth="441.0" spacing="10" stylesheets="@dark.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.rsreu.javafxfirsttry.GameOverDialogController">
+    <Label text="Игра окончена!" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+    <Label fx:id="errorLabel" text="Введите имя:" style="-fx-font-size: 16px;" textFill="RED"/>
+    <TextField fx:id="nameField" promptText="Ваше имя" style="-fx-font-size: 14px;"/>
+    <Button text="Сохранить результат" onAction="#handleSave" style="-fx-font-size: 14px;"/>
+</VBox>

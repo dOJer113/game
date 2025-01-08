@@ -2,6 +2,9 @@ package ru.rsreu.javafxfirsttry;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -12,6 +15,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -20,11 +24,12 @@ import java.util.Random;
 
 public class StarryNight extends Application {
 
-    public double gameDuration;
     public boolean gameOver;
     private static final String SNOWFLAKE_IMAGE_PATH = "C:\\Users\\aleks\\Downloads\\IdeaPR\\JavaFXFirstTry\\src\\main\\resources\\ru\\rsreu\\javafxfirsttry\\snowflake.png"; // Укажите путь к изображению снежинки
     private Image snowflakeImage = new Image(SNOWFLAKE_IMAGE_PATH, 100, 100, true, true);
-    private List<Snowflake> snowflakes = new ArrayList<>();
+    private List<Snowflake> snowflakes1 = new ArrayList<>();
+    private List<Snowflake> snowflakes2 = new ArrayList<>();
+
 
     public static final int WIDTH = 1000;
     public static final int HEIGHT = 590;
@@ -32,7 +37,7 @@ public class StarryNight extends Application {
     private long lastGiftTime = 0;
     private static final long GIFT_COOLDOWN = 600_000_000L;
     private int tickCounter = 0;
-    public static List<Gift> gifts = new ArrayList<>();
+    public List<Gift> gifts = new ArrayList<>();
     private List<House> housesCanvas1 = new ArrayList<>(); // Список домов для canvas1
     private List<House> housesCanvas2 = new ArrayList<>(); // Список домов для canvas2
     private GraphicsContext gc1; // GraphicsContext для canvas1
@@ -40,8 +45,8 @@ public class StarryNight extends Application {
     private Image image1;
     private Image image2;
     private int c = 0;
-    public static int score = 0;
-    public static boolean isFirst = true;
+    public int score = 0;
+    public boolean isFirst = true;
 
     private static final int FRAME_COUNT = 10; // Количество кадров
     private static final int FRAME_DURATION = 100_000_000; // Длительность одного кадра в наносекундах (0.1 секунды)
@@ -106,6 +111,11 @@ public class StarryNight extends Application {
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
+                if (gameOver) {
+                    stop();
+                    showGameOverDialog();
+                    return;
+                }
                 // Анимация Санты
                 if (now - lastUpdate >= FRAME_DURATION) {
                     currentFrame = (currentFrame + 1) % FRAME_COUNT;
@@ -143,6 +153,21 @@ public class StarryNight extends Application {
                         house.updateGarland(canvas2.getGraphicsContext2D());
                         image2 = canvas2.snapshot(null, null);
                         background2.setImage(image2);
+                    }
+                }
+                double santaViewX = santaView.getX();
+                isFirst = santaViewX > background1.getX() && santaViewX < background1.getX() + WIDTH;
+                List<Snowflake> currentSnowflakes = isFirst ? snowflakes1 : snowflakes2;
+                for (Snowflake snowflake : currentSnowflakes) {
+                    double start = isFirst ? background2.getX() : background1.getX();
+                    if (start <= 0) {
+                        snowflake.setRealX(start + 1000 + snowflake.getX());
+                    } else {
+                        snowflake.setRealX(start - 1000 + snowflake.getX());
+                    }
+                    if (snowflake.isPointInside(santaViewX + 40, santaView.getY()) ||
+                            snowflake.isPointInside(santaViewX + 110, santaView.getY() + 80)) {
+                        gameOver = true;
                     }
                 }
 
@@ -208,28 +233,43 @@ public class StarryNight extends Application {
 
         timer.start();
     }
+    private void showGameOverDialog() {
+        try {
+            // Загружаем FXML-файл с использованием относительного пути
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ru/rsreu/javafxfirsttry/game_over_dialog.fxml"));
+            Parent root = loader.load();
 
-    private void drawSnowflakes(GraphicsContext gc) {
-        snowflakes.clear();
+            // Получаем контроллер
+            GameOverDialogController controller = loader.getController();
 
-        double areaHeight = 100;
-        double area1Y = 0;
+            // Создаём новое окно
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Игра окончена");
+            dialogStage.initModality(Modality.APPLICATION_MODAL); // Блокирует основное окно
+            dialogStage.setScene(new Scene(root));
+            dialogStage.setResizable(false);
 
-        createSnowflakeInArea(area1Y, areaHeight);
+            // Устанавливаем сцену и показываем окно
+            controller.setDialogStage(dialogStage);
+            dialogStage.show();
 
-        // Отрисовываем снежинки
-        for (Snowflake snowflake : snowflakes) {
-            snowflake.draw(gc);
+            // Обрабатываем результат
+            if (controller.isSaveClicked()) {
+                String playerName = controller.getName();
+                System.out.println("Имя игрока: " + playerName);
+                System.out.println("Счёт: " + score);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
-
-    private void createSnowflakeInArea(double areaY, double areaHeight) {
+    private void drawSnowflakes(GraphicsContext gc, List<Snowflake> snowflakes) {
+        double areaHeight = 100;
         Random random = new Random();
         double x = 100 + random.nextDouble() * (WIDTH - 200);
 
-        double y1 = areaY;
-        double y2 = areaY + areaHeight;
-
+        double y1 = 0;
+        double y2 = 0 + areaHeight;
         double y = random.nextBoolean() ? y1 : y2;
 
         boolean isOverlapping = false;
@@ -244,9 +284,11 @@ public class StarryNight extends Application {
             Snowflake snowflake = new Snowflake(x, y, snowflakeImage);
             snowflakes.add(snowflake);
         }
+        for (Snowflake snowflake : snowflakes) {
+            snowflake.draw(gc);
+        }
     }
 
-    // Метод для отрисовки фона
     private void drawBackground(GraphicsContext gc) {
         // Очищаем старый фон
         gc.clearRect(0, 0, WIDTH, HEIGHT);
@@ -260,12 +302,15 @@ public class StarryNight extends Application {
             c++;
             return;
         }
-        drawSnowflakes(gc);
         if (gc == gc1) {
+            snowflakes1.clear();
             housesCanvas1.clear();
+            drawSnowflakes(gc, snowflakes1);
             drawHouses(gc, housesCanvas1); // Рисуем дома для canvas1
         } else if (gc == gc2) {
+            snowflakes2.clear();
             housesCanvas2.clear();
+            drawSnowflakes(gc, snowflakes2);
             drawHouses(gc, housesCanvas2); // Рисуем дома для canvas2
         }
     }
